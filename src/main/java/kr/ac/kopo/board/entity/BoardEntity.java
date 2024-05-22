@@ -1,0 +1,54 @@
+package kr.ac.kopo.board.entity;
+
+import jakarta.persistence.*;
+import kr.ac.kopo.board.dto.BoardDTO;
+import lombok.Getter;
+import lombok.Setter;
+
+//DB의 테이블 역활을 하는 클래스
+@Entity
+@Getter
+@Setter
+@Table(name = "board_table")
+public class BoardEntity extends BaseEntity{
+    @Id //pk컬럼지정. 필수!
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment
+    private Long id;
+
+    @Column(length = 20, nullable = false) //nullable은 null일수있다. nullable = false은 not null 이란 의미.
+    private String boardWriter;
+
+    @Column //이렇게 안정해주면 크기 255, null 가능 으로 됨.
+    private  String boardPass;
+
+    @Column
+    private String boardTitle;
+
+    @Column(length = 500)
+    private  String boardContents;
+
+    @Column
+    private  int boardHits;
+
+    public static BoardEntity toSaveEntity(BoardDTO boardDTO){ //변환에서는 static 을 씀. 이러면 그냥  메소드명으로 사용가능.
+
+        BoardEntity boardEntity = new BoardEntity();
+        boardEntity.setBoardWriter(boardDTO.getBoardWriter()); //boardDTO.getBoardWriter() 를 setBoardWriter 여기에 넣는다. 옮겨 담는다.
+        boardEntity.setBoardPass(boardDTO.getBoardPass());
+        boardEntity.setBoardTitle(boardDTO.getBoardTitle());
+        boardEntity.setBoardContents(boardDTO.getBoardContents());
+        boardEntity.setBoardHits(0);
+        return boardEntity;
+    }
+
+    public static BoardEntity toUpdateEntity(BoardDTO boardDTO) {
+        BoardEntity boardEntity = new BoardEntity();
+        boardEntity.setId(boardDTO.getId());
+        boardEntity.setBoardWriter(boardDTO.getBoardWriter()); //boardDTO.getBoardWriter() 를 setBoardWriter 여기에 넣는다. 옮겨 담는다.
+        boardEntity.setBoardPass(boardDTO.getBoardPass());
+        boardEntity.setBoardTitle(boardDTO.getBoardTitle());
+        boardEntity.setBoardContents(boardDTO.getBoardContents());
+        boardEntity.setBoardHits(boardDTO.getBoardHits());
+        return boardEntity;
+    }
+}

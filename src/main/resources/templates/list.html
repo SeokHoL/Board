@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>list</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>writer</th>
+        <th>date</th>
+        <th>hits</th>
+    </tr>
+    <tr th:each ="board: ${boardList}"> <!--$은 값을 표현 -->
+        <td th:text="${board.id}"></td>
+        <td><a th:href="@{|/board/${board.id}|}" th:text="${board.boardTitle}"></a></td>  <!--@{|/board/${board.id}|}은 /board/1 뭐 이렇게 보여줌-->
+        <td th:text="${board.boardWriter}"></td>
+        <td th:text="*{#temporals.format(board.boardCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td> <!--*{#temporals.format(...)} 구문은 날짜와 시간을 포맷팅하기 위해사용 -->
+        <td th:text="${board.boardHits}"></td>
+    </tr>
+</table>
+</body>
+</html>
