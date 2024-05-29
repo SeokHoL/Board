@@ -5,6 +5,9 @@ import kr.ac.kopo.board.dto.BoardDTO;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //DB의 테이블 역활을 하는 클래스
 @Entity
 @Getter
@@ -30,6 +33,16 @@ public class BoardEntity extends BaseEntity{
     @Column
     private  int boardHits;
 
+    @Column
+    private  int fileAttached; //1 or 0
+
+    @OneToMany(mappedBy ="boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =FetchType.LAZY)
+    private List<BoardFileEntity> boardFileEntityList = new ArrayList<>();
+
+    @OneToMany(mappedBy ="boardEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch =FetchType.LAZY)
+    private List<CommentEntity> commentEntityList = new ArrayList<>();
+
+
     public static BoardEntity toSaveEntity(BoardDTO boardDTO){ //변환에서는 static 을 씀. 이러면 그냥  메소드명으로 사용가능.
 
         BoardEntity boardEntity = new BoardEntity();
@@ -38,6 +51,7 @@ public class BoardEntity extends BaseEntity{
         boardEntity.setBoardTitle(boardDTO.getBoardTitle());
         boardEntity.setBoardContents(boardDTO.getBoardContents());
         boardEntity.setBoardHits(0);
+        boardEntity.setFileAttached(0); //파일이 없음.
         return boardEntity;
     }
 
@@ -50,5 +64,18 @@ public class BoardEntity extends BaseEntity{
         boardEntity.setBoardContents(boardDTO.getBoardContents());
         boardEntity.setBoardHits(boardDTO.getBoardHits());
         return boardEntity;
+    }
+
+    public static BoardEntity toSaveFileEntity(BoardDTO boardDTO) {
+        BoardEntity boardEntity = new BoardEntity();
+        boardEntity.setId(boardDTO.getId());
+        boardEntity.setBoardWriter(boardDTO.getBoardWriter()); //boardDTO.getBoardWriter() 를 setBoardWriter 여기에 넣는다. 옮겨 담는다.
+        boardEntity.setBoardPass(boardDTO.getBoardPass());
+        boardEntity.setBoardTitle(boardDTO.getBoardTitle());
+        boardEntity.setBoardContents(boardDTO.getBoardContents());
+        boardEntity.setBoardHits(boardDTO.getBoardHits());
+        boardEntity.setFileAttached(1); //파일 있음.
+        return boardEntity;
+
     }
 }
